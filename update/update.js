@@ -10,6 +10,7 @@ let mcl = mongodb.MongoClient
 //create router instance
 let router = express.Router()
 //create rest api
+/*
 router.post('/', (req, res) => {
     let p_id = req.body.p_id
     let obj = {
@@ -40,30 +41,31 @@ router.post('/', (req, res) => {
         }
     })
 })
-/*
-//Update product in cart
-router.post("/updateCart", (req, res) => {
-    let p_id = req.body.p_id
-    let uname = req.body.uname
-    let obj = { "qty": req.body.qty }
+*/
+//Update Patient history
+router.post("/updateHistory", (req, res) => {    
+    let name = req.body.name
+    let obj = {
+        
+    }
     //connect to mongodb
     mcl.connect(url, (err, conn) => {
         if (err)
             console.log('Error in connection:- ', err)
         else {
-            let db = conn.db('miniprj')
-            db.collection('cart').updateOne({ p_id, uname }, { $set: obj },
+            let db = conn.db(dbName)
+            db.collection('Appointments').updateOne({ name }, { $set: obj },
                 (err, result) => {
                     if (err)
-                        res.json({ 'cartUpdate': 'Error ' + err })
+                        res.json({ 'historyUpdate': 'Error ' + err })
                     else {
                         if (result.matchedCount != 0) {
-                            console.log(`Cart data for ${uname} updated`)
-                            res.json({ 'cartUpdate': 'success' })
+                            console.log(`History data for ${name} updated`)
+                            res.json({ 'historyUpdate': 'success' })
                         }
                         else {
                             console.log(`Record not updated`)
-                            res.json({ 'cartUpdate': 'Record Not found' })
+                            res.json({ 'historyUpdate': 'Record Not found' })
                         }
                         conn.close()
                     }
@@ -71,8 +73,5 @@ router.post("/updateCart", (req, res) => {
         }
     })
 })
-*/
-//Update user
-//to be done by participants
 //export router
 module.exports = router

@@ -35,11 +35,9 @@ router.post("/", (req, res) => {
 //Insert Appointment
 router.post("/appointment", (req, res) => {
     let date = new Date()
-    let obj = {
-        name :req.body.name,
-        date : date,
-        medicines :req.body.medicines
-    }    
+    let obj = req.body
+    obj.date = date
+    console.log("Body:- ",req.body,'object :- ',obj)
     //connect to mongodb
     mcl.connect(url, (err, conn) => {
         if (err)
@@ -60,36 +58,28 @@ router.post("/appointment", (req, res) => {
 })
 
 
-/*
-//Insert User
-router.post("/createUser", (req, res) => {
-    let obj = {
-        "userid": req.body.userid,
-        "uname": req.body.uname,
-        "upwd": req.body.upwd,
-        "email": req.body.email,
-        "address": req.body.address,
-        "contact": req.body.contact
-    }
+//Create Doctor
+router.post("/createDoctor", (req, res) => {
+    let obj = req.body
     //connect to mongodb
     mcl.connect(url, (err, conn) => {
         if (err)
             console.log('Error in connection :- ', err)
         else {
             let db = conn.db(dbName)
-            db.collection('users').insertOne(obj, (err) => {
+            db.collection('Doctors').insertOne(obj, (err) => {
                 if (err)
-                    res.json({ 'userInsert': 'Error ' + err })
+                    res.json({ 'doctorInsert': 'Error ' + err })
                 else {
-                    console.log("User inserted")
-                    res.json({ 'userInsert': 'success' })
+                    console.log("doctor inserted")
+                    res.json({ 'doctorInsert': 'success' })
                     conn.close()
                 }
             })
         }
     })
 })
-
+/*
 //insert product into cart
 router.post("/cartInsert",(req,res)=>{
     let obj = {

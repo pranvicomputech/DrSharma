@@ -35,18 +35,27 @@ router.get("/", (req, res) => {
 //Find a Patient
 router.post("/find", (req, res) => {
     let name = req.body.name
+    let drname = req.body.drname
+    console.log("body in pataint find", req.body)
     //connect to mongodb
     mcl.connect(url, (err, conn) => {
         if (err)
             console.log('Error in connection:- ', err)
         else {
-            let db = conn.db(dbName)            
+            let db = conn.db(dbName)
             db.collection('Patients').find(
-                {$or: [
-                    { fname: name },
-                    { lname: name},
-                    { mname: name}
-                  ]}
+                {
+                    $and: [
+                        {
+                            $or: [
+                                { fname: name },
+                                { lname: name },
+                                { mname: name }
+                            ]
+                        },
+                        { drname: drname }
+                    ]
+                },
             ).toArray((err, array) => {
                 if (err)
                     console.log(err)
@@ -85,12 +94,12 @@ router.post("/history", (req, res) => {
     })
 })
 
-/*
-//User login Authentication
+
+//Authentication
 router.post("/auth", (req, res) => {
-    let u_name = req.body.uname
-    let u_pwd = req.body.upwd
-    let obj = { u_name, u_pwd }
+    let drname = req.body.drname
+    let password = req.body.password
+    let obj = { drname, password }
     console.log(obj)
     //connect to mongodb
     mcl.connect(url, (err, conn) => {
@@ -98,12 +107,12 @@ router.post("/auth", (req, res) => {
             console.log('Error in connection:- ', err)
         else {
             let db = conn.db(dbName)
-            db.collection('users').find(obj).toArray((err, array) => {
+            db.collection('Doctors').find(obj).toArray((err, array) => {
                 if (err)
                     console.log(err)
                 else {
                     if (array.length > 0)
-                        res.json({ 'auth': 'success', 'user': u_name })
+                        res.json({ 'auth': 'success', 'drname': drname })
                     else
                         res.json({ 'auth': 'failed' })
                     console.log('Auth response sent')
@@ -113,6 +122,7 @@ router.post("/auth", (req, res) => {
         }
     })
 })
+/*
 //Fetch cart data
 router.post("/fetchCart", (req, res) => {
     let uname = req.body.uname
