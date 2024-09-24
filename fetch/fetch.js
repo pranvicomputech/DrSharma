@@ -112,7 +112,7 @@ router.post("/auth", (req, res) => {
                     console.log(err)
                 else {
                     if (array.length > 0)
-                        res.json({ 'auth': 'success', 'drname': drname })
+                        res.json({ 'auth': 'success', 'drname': array[0] })
                     else
                         res.json({ 'auth': 'failed' })
                     console.log('Auth response sent')
